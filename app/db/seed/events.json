@@ -1,0 +1,87 @@
+[
+  {
+    "id": "6fd13ba7-d13a-4f6a-832d-ce10ea7c8640",
+    "name": "Event 1 with pretty long name, with pretty long name, with pretty long name",
+    "date": "2024-01-01 18:00",
+    "location": [9.707849, 99.994402],
+    "images": [
+      "https://tecdn.b-cdn.net/img/new/standard/nature/184.jpg",
+      "https://www.quackit.com/pix/samples/22l.jpg",
+      "https://www.quackit.com/pix/samples/remarkables_queenstown_new_zealand.jpg"
+    ],
+    "prices": [
+      { "price": 500, "currency": "THB" },
+      { "price": 700, "currency": "THB" },
+      { "price": 900, "currency": "THB" }
+    ],
+    "description": "I was recently tasked with creating some random customer data, with names, phone numbers, addresses, and the usual other stuff. At first, I thought I’ll just generate random strings and numbers (some gibberish) and call it a day. But then I remembered my colleagues using a package for that. I know, there’s always a package for everything, well, almost everything."
+  },
+  {
+    "id": "92598f66-4af2-42d6-b35b-7aa01801f29c",
+    "name": "Event 2",
+    "date": "2022-02-01 18:00",
+    "location": [9.707849, 99.994402],
+    "images": [
+      "https://tecdn.b-cdn.net/img/new/standard/nature/184.jpg",
+      "https://www.quackit.com/pix/samples/22l.jpg",
+      "https://www.quackit.com/pix/samples/remarkables_queenstown_new_zealand.jpg"
+    ],
+    "prices": [
+      { "price": 510, "currency": "THB" },
+      { "price": 710, "currency": "THB" },
+      { "price": 910, "currency": "THB" }
+    ],
+    "description": "Anyway, I thought I’ll give it a shot. I’ve started to write some serious Python code these days and thought it to be a good idea to explore the various packages available for Python."
+  },
+  {
+    "id": "3c8a7e3e-7a2e-4e5f-8e7d-9a6b5c4d2f1a",
+    "name": "Event 3",
+    "date": "2022-03-01 18:00",
+    "location": [9.707849, 99.994402],
+    "images": [
+      "https://tecdn.b-cdn.net/img/new/standard/nature/184.jpg",
+      "https://www.quackit.com/pix/samples/22l.jpg",
+      "https://www.quackit.com/pix/samples/remarkables_queenstown_new_zealand.jpg"
+    ],
+    "prices": [
+      { "price": 520, "currency": "THB" },
+      { "price": 720, "currency": "THB" },
+      { "price": 920, "currency": "THB" }
+    ],
+    "description": "Installing Faker is no different than installing any other Python package using pip. You can use any one of the following commands to install Faker."
+  },
+  {
+    "id": "f7e3a9b2-8e6d-4c5f-9a7b-1a2e3c4d5f6e",
+    "name": "Event 4",
+    "date": "2022-04-01 18:00",
+    "location": [9.707849, 99.994402],
+    "images": [
+      "https://tecdn.b-cdn.net/img/new/standard/nature/184.jpg",
+      "https://www.quackit.com/pix/samples/22l.jpg",
+      "https://www.quackit.com/pix/samples/remarkables_queenstown_new_zealand.jpg"
+    ],
+    "prices": [
+      { "price": 530, "currency": "THB" },
+      { "price": 730, "currency": "THB" },
+      { "price": 930, "currency": "THB" }
+    ],
+    "description": "Depending on the version of Python you have installed, use the appropriate command to install the Faker package. It shouldn’t take more than a couple minutes."
+  },
+  {
+    "id": "48e080c9-ad6c-4299-9e05-6649fac1918f",
+    "name": "Event 5",
+    "date": "2022-05-01 18:00",
+    "location": [9.707849, 99.994402],
+    "images": [
+      "https://tecdn.b-cdn.net/img/new/standard/nature/184.jpg",
+      "https://www.quackit.com/pix/samples/22l.jpg",
+      "https://www.quackit.com/pix/samples/remarkables_queenstown_new_zealand.jpg"
+    ],
+    "prices": [
+      { "price": 540, "currency": "THB" },
+      { "price": 740, "currency": "THB" },
+      { "price": 940, "currency": "THB" }
+    ],
+    "description": "Importing the Faker package into your code is also nothing different. Simply add the following import statement at the beginning of your Python file and you should be good to go."
+  }
+]

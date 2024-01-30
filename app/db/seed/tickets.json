@@ -1,0 +1,37 @@
+[
+  {
+    "id": "a63cf0e6-6059-4cae-819b-57fd55b03c71",
+    "eventId": "6fd13ba7-d13a-4f6a-832d-ce10ea7c8640",
+    "issuedAt": "2022-01-01 18:00",
+    "usedAt": null,
+    "price": 500,
+    "currency": "THB",
+    "receipts": [
+      "https://storage.googleapis.com/mini-project-1-310608.appspot.com/receipts/2022-01-01_18:00:00_6fd13ba7-d13a-4f6a-832d-ce10ea7c8640.png"
+    ]
+  },
+  {
+    "id": "224da7fc-9d2e-4fd5-8f02-d46b8f2554d4",
+    "eventId": "3c8a7e3e-7a2e-4e5f-8e7d-9a6b5c4d2f1a",
+    "issuedAt": "2022-03-01 18:00",
+    "usedAt": null,
+    "price": 520,
+    "currency": "THB"
+  },
+  {
+    "id": "bf23bdac-fa69-46e4-ad4a-a62471290383",
+    "eventId": "3c8a7e3e-7a2e-4e5f-8e7d-9a6b5c4d2f1a",
+    "issuedAt": "2022-03-01 18:00",
+    "usedAt": null,
+    "price": 520,
+    "currency": "THB"
+  },
+  {
+    "id": "6888120f-a8e6-402a-bd21-78aded1f6bfd",
+    "eventId": "f7e3a9b2-8e6d-4c5f-9a7b-1a2e3c4d5f6e",
+    "issuedAt": "2022-04-01 18:00",
+    "usedAt": null,
+    "price": 930,
+    "currency": "THB"
+  }
+]
