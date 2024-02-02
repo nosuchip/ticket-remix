@@ -4,7 +4,7 @@ import { AccountAvatar } from "../AccountAvatar";
 import { Link } from "@remix-run/react";
 import { Navbar } from "flowbite-react";
 import { TicketIcon } from "@heroicons/react/24/outline";
-import { User } from "~/types/user";
+import { User } from "~/db/types";
 import clsx from "clsx";
 import { renderMenuOptions } from "../AccountAvatar/MenuOptions";
 

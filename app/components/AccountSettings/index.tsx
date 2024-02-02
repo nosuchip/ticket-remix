@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import { Overlay } from "../Overlay";
 import { PencilIcon } from "@heroicons/react/24/solid";
-import { User } from "~/types/user";
+import { User } from "~/db/types";
 import clsx from "clsx";
 import styles from "./AccountSettings.module.css";
 import { useFileReader } from "~/utils/hooks/useFileReader";
@@ -17,7 +17,9 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ user }) => {
   const submit = useSubmit();
   const filereader = useFileReader();
 
-  const [avatar, setAvatar] = useState<string | undefined>(user.picture);
+  const [avatar, setAvatar] = useState<string | undefined>(
+    user.picture || undefined
+  );
 
   useEffect(() => {
     if (filereader.result) {
@@ -40,16 +42,21 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ user }) => {
   return (
     <Card className="min-w-[420px]">
       <Form method="post" encType="multipart/form-data" onSubmit={handleSubmit}>
-        <input type="hidden" name="sub" value={user.sub} />
+        <input type="hidden" name="sub" value={user.providerId} />
 
         <div className="flex flex-col items-center p-4 mb-4">
           <div
             className={clsx(
               "mb-3 rounded-full shadow-lg overflow-hidden relative w-[96px] h-[96px]",
-              styles.OverlayTrigger,
+              styles.OverlayTrigger
             )}
           >
-            <img alt={user.name} height="96" src={avatar} width="96" />
+            <img
+              alt={user.name || user.email || ""}
+              height="96"
+              src={avatar}
+              width="96"
+            />
             <Overlay
               visible
               classNames={{
@@ -61,7 +68,7 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ user }) => {
                 color="light"
                 className={clsx(
                   "p-8 absolute z-[11] cursor-pointer",
-                  styles.EditIcon,
+                  styles.EditIcon
                 )}
                 htmlFor="avatar"
               >
@@ -87,7 +94,7 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ user }) => {
           <div className="mb-2 block">
             <Label value="Email" />
           </div>
-          <TextInput type="text" disabled value={user.email} />
+          <TextInput type="text" disabled value={user.email || ""} />
         </div>
 
         <div className="mb-8">

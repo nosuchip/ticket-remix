@@ -2,6 +2,7 @@ import { numeric, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 import { events } from "./events";
 import { sql } from "drizzle-orm";
+import { users } from "./users";
 
 export const tickets = pgTable("tickets", {
   id: uuid("id")
@@ -10,6 +11,7 @@ export const tickets = pgTable("tickets", {
   eventId: uuid("event_id")
     .notNull()
     .references(() => events.id),
+  userId: uuid("user_id").references(() => users.id),
   issuedAt: timestamp("issued_at").notNull(),
   usedAt: timestamp("used_at"),
   price: numeric("price"),

@@ -29,6 +29,7 @@
     "dayjs": "^1.11.10",
     "dotenv": "^16.4.1",
     "drizzle-orm": "^0.29.3",
+    "ethers": "^6.10.0",
     "flowbite": "^2.2.1",
     "flowbite-react": "^0.7.2",
     "isbot": "^4.1.0",

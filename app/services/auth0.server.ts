@@ -1,14 +1,14 @@
-import { Auth0UserInfo, User } from "~/types/user";
+import { Auth0Profile, Auth0Strategy } from "remix-auth-auth0";
 
-import { Auth0Strategy } from "remix-auth-auth0";
 import { Authenticator } from "remix-auth";
 import { Dictionary } from "~/types/generic";
 import { ManagementClient } from "auth0";
-import { auth0ProfileToUser } from "~/utils/formatters";
 import { getOrThrow } from "~/utils/env";
 import { sessionStorage } from "./session.server";
 
-export const authenticator = new Authenticator<User>(sessionStorage);
+export type Auth0UserInfo = Auth0Profile["_json"];
+
+export const authenticator = new Authenticator<Auth0Profile>(sessionStorage);
 
 const auth0Strategy = new Auth0Strategy(
   {
@@ -19,8 +19,8 @@ const auth0Strategy = new Auth0Strategy(
     scope: "openid profile email app_metadata user_metadata",
   },
   async ({ profile }) => {
-    return auth0ProfileToUser(profile._json);
-  },
+    return profile;
+  }
 );
 
 authenticator.use(auth0Strategy);
@@ -41,7 +41,7 @@ export const getAccessToken = async (): Promise<string> => {
 
   const response = await fetch(
     "https://ticket-remix.au.auth0.com/oauth/token",
-    options,
+    options
   );
   const json = await response.json();
 
@@ -50,8 +50,8 @@ export const getAccessToken = async (): Promise<string> => {
 
 export const updateUserMetadata = async (
   userId: string,
-  update: Dictionary,
-) => {
+  update: Dictionary
+): Promise<Auth0UserInfo> => {
   const accessToken = await getAccessToken();
 
   const management = new ManagementClient({
@@ -77,12 +77,13 @@ export const updateUserMetadata = async (
 
   const response = await management.users.update(
     { id: userId },
-    filteredUpdate,
+    filteredUpdate
   );
-  return auth0ProfileToUser(response.data as Auth0UserInfo);
+
+  return response.data as Auth0UserInfo;
 };
 
-export const loadUser = async (userId: string) => {
+export const loadUser = async (userId: string): Promise<Auth0UserInfo> => {
   const accessToken = await getAccessToken();
 
   const management = new ManagementClient({
@@ -91,5 +92,5 @@ export const loadUser = async (userId: string) => {
   });
 
   const response = await management.users.get({ id: userId });
-  return auth0ProfileToUser(response.data as Auth0UserInfo);
+  return response.data as Auth0UserInfo;
 };

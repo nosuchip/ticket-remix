@@ -2,7 +2,7 @@ import { Avatar, Dropdown } from "flowbite-react";
 
 import { Link } from "@remix-run/react";
 import React from "react";
-import { User } from "~/types/user";
+import { User } from "~/db/types";
 import { renderMenuOptions } from "./MenuOptions";
 
 interface AccountAvatarProps {
@@ -10,7 +10,7 @@ interface AccountAvatarProps {
 }
 
 export const AccountAvatar: React.FC<AccountAvatarProps> = ({ user }) => {
-  if (!user) {
+  if (!user || !user.picture) {
     return null;
   }
 
@@ -19,7 +19,13 @@ export const AccountAvatar: React.FC<AccountAvatarProps> = ({ user }) => {
       <Dropdown
         arrowIcon={false}
         inline
-        label={<Avatar alt={user?.name} img={user?.picture} rounded />}
+        label={
+          <Avatar
+            alt={user?.name || user?.email || ""}
+            img={user?.picture}
+            rounded
+          />
+        }
       >
         <Dropdown.Header>
           <span className="block text-sm">
