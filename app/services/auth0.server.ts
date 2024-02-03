@@ -1,8 +1,6 @@
 import { Auth0Profile, Auth0Strategy } from "remix-auth-auth0";
 
 import { Authenticator } from "remix-auth";
-import { Dictionary } from "~/types/generic";
-import { ManagementClient } from "auth0";
 import { getOrThrow } from "~/utils/env";
 import { sessionStorage } from "./session.server";
 
@@ -25,6 +23,7 @@ const auth0Strategy = new Auth0Strategy(
 
 authenticator.use(auth0Strategy);
 
+/*
 export const getAccessToken = async (): Promise<string> => {
   const options = {
     method: "POST",
@@ -94,3 +93,4 @@ export const loadUser = async (userId: string): Promise<Auth0UserInfo> => {
   const response = await management.users.get({ id: userId });
   return response.data as Auth0UserInfo;
 };
+*/

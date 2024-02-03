@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
   Button,
   FileInput,
@@ -9,8 +9,8 @@ import {
 } from "flowbite-react";
 import { getEventById, getTicketsByEventId } from "~/db/queries";
 import { isEventInPast, isUserAdmin } from "~/utils/validators";
+import { superjson, useSuperLoaderData } from "~/utils/remix-superjson";
 import { useEffect, useState } from "react";
-import { useFetcher, useLoaderData } from "@remix-run/react";
 
 import { LinkIcon } from "@heroicons/react/24/solid";
 import { OverlayWithSpinner } from "~/components/Overlay";
@@ -18,16 +18,16 @@ import { Page } from "~/components/Page";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import QrCode from "qrcode.react";
 import { Ticket } from "~/db/types";
-import { authenticator } from "~/services/auth0.server";
 import { db } from "~/db/index.server";
+import { formatDate } from "~/utils/formatters";
+import { isAuthenticated } from "~/services/session.server";
 import { parseMultipartFormData } from "~/utils/uploader.server";
 import schema from "~/db/schema";
 import { serializeQrData } from "~/utils/qr";
+import { useFetcher } from "@remix-run/react";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/auth/login",
-  });
+  const user = await isAuthenticated(request);
 
   if (!isUserAdmin(user)) {
     throw new Response("Forbidden", { status: 403 });
@@ -43,7 +43,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
   const tickets = await getTicketsByEventId(params.eventId!);
 
-  return json({
+  return superjson({
     user,
     event,
     tickets,
@@ -53,7 +53,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export default function AdminEvent(): JSX.Element {
   const fetcher = useFetcher<typeof action>();
 
-  const { user, event, tickets } = useLoaderData<typeof loader>();
+  const { user, event, tickets } = useSuperLoaderData<typeof loader>();
   const [openModal, setOpenModal] = useState(false);
 
   const [email, setEmail] = useState("");
@@ -105,8 +105,8 @@ export default function AdminEvent(): JSX.Element {
             >
               <Table.Cell className="font-bold">{index}</Table.Cell>
               <Table.Cell>{ticket.email || "---"}</Table.Cell>
-              <Table.Cell>{ticket.issuedAt}</Table.Cell>
-              <Table.Cell>{ticket.usedAt || "---"}</Table.Cell>
+              <Table.Cell>{formatDate(ticket.issuedAt, "---")}</Table.Cell>
+              <Table.Cell>{formatDate(ticket.usedAt, "---")}</Table.Cell>
               <Table.Cell>{ticket.description || "---"}</Table.Cell>
               <Table.Cell>
                 {ticket.receipts?.map((receipt, index) => (
@@ -246,5 +246,5 @@ export async function action({ request, params }: ActionFunctionArgs) {
     })
     .returning();
 
-  return json({ success: true, ticket });
+  return superjson({ success: true, ticket });
 }

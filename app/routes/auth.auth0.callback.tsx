@@ -1,4 +1,5 @@
 import { LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { commitSession, getSession } from "~/services/session.server";
 import { createUser, getUserByProviderId } from "~/db/queries";
 
 import { authenticator } from "~/services/auth0.server";
@@ -23,5 +24,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     });
   }
 
-  return redirect("/");
+  const session = await getSession(request.headers.get("Cookie"));
+  session.set("user", user);
+
+  return redirect("/", {
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
+  });
 };

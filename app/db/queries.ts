@@ -1,7 +1,6 @@
-import { eq, or } from "drizzle-orm";
-
 import { User } from "./types";
 import { db } from "./index.server";
+import { eq } from "drizzle-orm";
 import schema from "./schema";
 
 export const getAllEvents = async () => db.query.events.findMany();
@@ -44,19 +43,20 @@ export const createUser = async (user: Omit<User, "id" | "createdAt">) => {
 };
 
 export const updateUser = async (
-  user: Pick<User, "id" | "providerId" | "name" | "email">
+  filter: { id?: string; providerId?: string },
+  update: { name?: string; email?: string; picture?: string }
 ) => {
-  if (!user.id && !user.providerId) {
+  if (!filter.id && !filter.providerId) {
     throw new Error("User id or providerId is required");
   }
 
-  const where = user.id
-    ? eq(schema.users.id, user.id)
-    : eq(schema.users.providerId, user.providerId);
+  const where = filter.id
+    ? eq(schema.users.id, filter.id)
+    : eq(schema.users.providerId, filter.providerId!);
 
   const result = await db
     .update(schema.users)
-    .set(user)
+    .set(update)
     .where(where)
     .returning();
 

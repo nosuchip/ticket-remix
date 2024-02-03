@@ -1,4 +1,6 @@
-import { createCookieSessionStorage } from "@remix-run/node";
+import { createCookieSessionStorage, redirect } from "@remix-run/node";
+
+import { User } from "~/db/types";
 import { getOrThrow } from "~/utils/env";
 
 export const sessionStorage = createCookieSessionStorage({
@@ -13,3 +15,23 @@ export const sessionStorage = createCookieSessionStorage({
 });
 
 export const { getSession, commitSession, destroySession } = sessionStorage;
+
+interface AuthenticationOptions {
+  failureRedirect?: string;
+}
+
+export const isAuthenticated = async (
+  request: Request,
+  options?: AuthenticationOptions
+) => {
+  const session = await getSession(request.headers.get("Cookie"));
+  const user: User = session.get("user");
+
+  if (!user) {
+    if (options?.failureRedirect) {
+      throw redirect(options?.failureRedirect);
+    }
+  }
+
+  return user;
+};

@@ -6,6 +6,8 @@
     "flowbite",
     "heroicons",
     "hoverable",
-    "qrcode"
+    "qrcode",
+    "Signup",
+    "superjson"
   ]
 }

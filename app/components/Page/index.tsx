@@ -16,7 +16,7 @@ interface PageProps extends PropsWithChildren {
 export const Page: React.FC<PageProps> = ({ user, className, children }) => {
   return (
     <div>
-      <Navbar fluid rounded className="pb-8 pt-6">
+      <Navbar fluid rounded className="pb-8 pt-6 mx-4">
         <Navbar.Brand as={Link} href="/">
           <TicketIcon className="w-12 h-12 mr-4" />
           <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">

@@ -1,26 +1,26 @@
-import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { superjson, useSuperLoaderData } from "~/utils/remix-superjson";
 
+import { LoaderFunctionArgs } from "@remix-run/node";
 import { Page } from "~/components/Page";
 import TicketCardsContainer from "~/components/TicketCardsContainer";
-import { authenticator } from "~/services/auth0.server";
 import { getTicketsByEmail } from "~/db/queries";
-import { useLoaderData } from "@remix-run/react";
+import { isAuthenticated } from "~/services/session.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await authenticator.isAuthenticated(request, {
+  const user = await isAuthenticated(request, {
     failureRedirect: "/auth/login",
   });
 
   const tickets = await getTicketsByEmail(user!.email!);
 
-  return json({
+  return superjson({
     user,
     tickets,
   });
 }
 
 export default function MyTickets() {
-  const { user, tickets } = useLoaderData<typeof loader>();
+  const { user, tickets } = useSuperLoaderData<typeof loader>();
 
   return (
     <Page user={user || undefined}>

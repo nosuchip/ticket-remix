@@ -15,7 +15,7 @@ export const AccountAvatar: React.FC<AccountAvatarProps> = ({ user }) => {
   }
 
   return (
-    <div className="flex md:order-2 mx-4">
+    <div className="flex md:order-2 ml-4">
       <Dropdown
         arrowIcon={false}
         inline

@@ -42,7 +42,7 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ user }) => {
   return (
     <Card className="min-w-[420px]">
       <Form method="post" encType="multipart/form-data" onSubmit={handleSubmit}>
-        <input type="hidden" name="sub" value={user.providerId} />
+        <input type="hidden" name="providerId" value={user.providerId} />
 
         <div className="flex flex-col items-center p-4 mb-4">
           <div

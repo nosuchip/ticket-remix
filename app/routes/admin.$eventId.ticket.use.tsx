@@ -1,28 +1,32 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { getEventById, getTicketById } from "~/db/queries";
-import { useActionData, useLoaderData, useSubmit } from "@remix-run/react";
+import {
+  superjson,
+  useSuperActionData,
+  useSuperLoaderData,
+} from "~/utils/remix-superjson";
 import { useEffect, useMemo, useState } from "react";
 
 import { Badge } from "flowbite-react";
 import { Event } from "~/db/types";
 import { Page } from "~/components/Page";
 import { QrScanner } from "~/components/QrScanner/index";
-import { authenticator } from "~/services/auth0.server";
 import clsx from "clsx";
 import { db } from "~/db/index.server";
 import { deserializeQrData } from "~/utils/qr";
 import { eq } from "drizzle-orm";
+import { formatDate } from "~/utils/formatters";
+import { isAuthenticated } from "~/services/session.server";
 import { isUserAdmin } from "~/utils/validators";
 import schema from "~/db/schema";
+import { useSubmit } from "@remix-run/react";
 
 interface AdminTicketUseProps {
   event: Event;
 }
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/auth/login",
-  });
+  const user = await isAuthenticated(request);
 
   if (!isUserAdmin(user)) {
     throw new Response("Forbidden", { status: 403 });
@@ -30,7 +34,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   const event = await getEventById(params.eventId!);
 
-  return json({
+  return superjson({
     user,
     event,
   });
@@ -39,7 +43,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export default function AdminTicketUse({
   event,
 }: AdminTicketUseProps): JSX.Element {
-  const { user } = useLoaderData<typeof loader>();
+  const { user } = useSuperLoaderData<typeof loader>();
 
   const [scanData, setScanData] = useState<{
     ticketId: string;
@@ -47,7 +51,7 @@ export default function AdminTicketUse({
   } | null>(null);
 
   const submit = useSubmit();
-  const response = useActionData<typeof action>();
+  const response = useSuperActionData<typeof action>();
 
   useEffect(() => {
     if (!scanData) {
@@ -110,7 +114,7 @@ export default function AdminTicketUse({
               type="button"
               className={clsx(
                 "w-full p-5 font-bold text-black-500 border border-b-0 border-gray-200 rounded-t-xl bg-gray-100",
-                !response || (failResponse && "rounded-b-xl"),
+                !response || (failResponse && "rounded-b-xl")
               )}
             >
               <span>{successResponse && response?.event?.name}</span>
@@ -132,7 +136,7 @@ export default function AdminTicketUse({
                 className="p-4 rounded-xl text-3xl font-bold text-center mt-8"
               >
                 Ticket verified and successfully used at{" "}
-                {response?.ticket?.usedAt}
+                {formatDate(response?.ticket?.usedAt)}
               </Badge>
 
               <p className="text-center mt-8">
@@ -155,14 +159,14 @@ export async function action({ request }: ActionFunctionArgs) {
   const ticket = await getTicketById(ticketId);
 
   if (!ticket) {
-    return json(
+    return superjson(
       {
         success: false,
         message: "Ticket not found",
         event: null,
         ticket: null,
       },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -172,14 +176,14 @@ export async function action({ request }: ActionFunctionArgs) {
     ticket.eventId !== checkEventId ||
     eventId !== checkEventId
   ) {
-    return json(
+    return superjson(
       {
         success: false,
         message: "Ticket is invalid or already used",
         event: null,
         ticket: null,
       },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -192,5 +196,5 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const event = await getEventById(eventId);
 
-  return json({ success: true, ticket, event, message: null });
+  return superjson({ success: true, ticket, event, message: null });
 }

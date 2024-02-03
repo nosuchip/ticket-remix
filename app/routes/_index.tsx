@@ -1,12 +1,12 @@
-import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { superjson, useSuperLoaderData } from "~/utils/remix-superjson";
 
 import EventCardsContainer from "~/components/EventCardsContainer";
+import { LoaderFunctionArgs } from "@remix-run/node";
 import type { MetaFunction } from "@remix-run/node";
 import { Page } from "~/components/Page";
-import { authenticator } from "~/services/auth0.server";
 import { getAllEvents } from "~/db/queries";
+import { isAuthenticated } from "~/services/session.server";
 import { isUserAdmin } from "~/utils/validators";
-import { useLoaderData } from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -16,18 +16,18 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await authenticator.isAuthenticated(request);
+  const user = await isAuthenticated(request);
 
   const events = await getAllEvents();
 
-  return json({
+  return superjson({
     user,
     events,
   });
 }
 
 export default function Events() {
-  const { user, events } = useLoaderData<typeof loader>();
+  const { user, events } = useSuperLoaderData<typeof loader>();
 
   return (
     <Page user={user || undefined}>

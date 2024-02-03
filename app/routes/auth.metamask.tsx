@@ -7,15 +7,17 @@ import { createUser, getUserByProviderId, updateUser } from "~/db/queries";
 import crypto from "crypto";
 import { verifySignature } from "~/utils/eth";
 
-export const loader = () => redirect("/auth/login");
+export const loader = async () => {
+  return null;
+};
 
-export default function PostMetamaskSignup({}) {
+export default function PostMetamaskSignup() {
   const data = useActionData<typeof action>();
 
   return (
     <div className="flex items-center justify-center w-screen h-screen">
       <Card className="w-96">
-        <Form method="post">
+        <Form action="/auth/metamask" method="post">
           <input type="hidden" name="action" value="update" />
           <input type="hidden" name="address" value={data?.address} />
 
@@ -33,7 +35,9 @@ export default function PostMetamaskSignup({}) {
             <TextInput type="text" id="name" name="name" />
           </div>
 
-          <Button color="primary">Finalize sign up</Button>
+          <Button color="primary" type="submit">
+            Finalize sign up
+          </Button>
         </Form>
       </Card>
     </div>
@@ -43,6 +47,7 @@ export default function PostMetamaskSignup({}) {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const address = formData.get("address") as string;
+  const returnTo = (formData.get("returnTo") as string) || "/";
 
   if (!address) {
     console.error(`No 'address' in form data`);
@@ -73,6 +78,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         roles: [],
         stripeCustomerId: null,
       });
+    } else if (user.email) {
+      const session = await getSession(request.headers.get("Cookie"));
+      session.set("user", user);
+
+      return redirect(returnTo, {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      });
     }
 
     return { address };
@@ -92,16 +106,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       .update(email.toLowerCase())
       .digest("hex");
 
-    user = await updateUser({
-      email,
-      name,
-      picture: `https://gravatar.com/avatar/${hash}`,
-    });
+    user = await updateUser(
+      { providerId },
+      {
+        email,
+        name,
+        picture: `https://gravatar.com/avatar/${hash}`,
+      }
+    );
 
     const session = await getSession(request.headers.get("Cookie"));
     session.set("user", user);
 
-    return redirect("/", {
+    return redirect(returnTo, {
       headers: {
         "Set-Cookie": await commitSession(session),
       },
